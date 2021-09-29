@@ -7,8 +7,8 @@
         <div class="card-body">
             <ul class="nav" role="tablist">
                 <li>
-                    <a href="{{ url('events') }}">
-                        Events
+                    <a href="{{ url('users') }}">
+                        Users
                     </a>
                 </li>
             </ul>

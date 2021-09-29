@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use Auth;
 
-use App\Models\Event;
+use App\Models\User;
 use App\Models\Invitees;
 use App\Models\InviteesEvents;
 use Illuminate\Http\Request;
@@ -33,14 +33,12 @@ class UserController extends Controller
         $perPage = 25;
 
         if (!empty($keyword)) {
-            $events = Event::where('created_user_id',$this->userId)
-                ->where('name', 'LIKE', "%$keyword%")
+            $users = User::where('first_name', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
-            $events = Event::with('invities_events')->where('created_user_id',$this->userId)
-                ->latest()->paginate($perPage);
+            $users = User::latest()->paginate($perPage);
         }
-        return view('admin.users.index', compact('events'));
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -71,7 +69,7 @@ class UserController extends Controller
         $requestData['end_date'] = date('Y-m-d',strtotime($requestData['end_date']));
         $requestData['created_user_id'] = Auth::user()->id;
 
-        Event::create($requestData);
+        User::create($requestData);
         if(!empty($requestData['invite_user'])) {
             foreach ($requestData['invite_user'] as $key => $value) {
                 if(!empty($value)) {
@@ -98,7 +96,7 @@ class UserController extends Controller
      * @return \Illuminate\View\View
      */
     public function edit($id) {
-        $event = Event::with('invities_events')->findOrFail($id);
+        $event = User::with('invities_events')->findOrFail($id);
         return view('admin.users.edit',compact('event'));
     }
 
@@ -119,7 +117,7 @@ class UserController extends Controller
             'end_date' => 'required|date_format:d-m-Y|date'
         ]);
 
-        $event = Event::findOrFail($id);
+        $event = User::findOrFail($id);
         $requestData['start_date'] = date('Y-m-d',strtotime($requestData['start_date']));
         $requestData['end_date'] = date('Y-m-d',strtotime($requestData['end_date']));
         $requestData['created_user_id'] = Auth::user()->id;
@@ -153,7 +151,7 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function destroy($id) {
-        Event::destroy($id);
+        User::destroy($id);
 
         return redirect('users')->with('flash_message', 'Event deleted!');
     }

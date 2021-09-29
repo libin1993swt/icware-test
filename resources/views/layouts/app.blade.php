@@ -35,7 +35,6 @@
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <li><a class="nav-link" href="{{ url('events-list') }}">All Events</a></li>
                         <!-- Authentication Links -->
                         @if(!Auth::check())
                             <li><a class="nav-link" href="{{ url('/login') }}">Login</a></li>
