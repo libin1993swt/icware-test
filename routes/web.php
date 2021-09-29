@@ -21,10 +21,6 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::any('users', [UserController::class, 'index'])->name('users');
-    Route::get('users/create',[UserController::class, 'create'])->name('users.create');
-    Route::post('users/create',[UserController::class, 'store'])->name('users.store');
-    Route::get('users/{id}/edit',[UserController::class, 'edit'])->name('users.edit');
-    Route::patch('users/{id}',[UserController::class, 'update'])->name('users.update');
 
     Route::get('dashboard', [AuthController::class, 'dashboard']); 
     Route::get('logout', [AuthController::class, 'logout'])->name('logout');
