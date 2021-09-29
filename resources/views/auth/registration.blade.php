@@ -2,11 +2,14 @@
   
 @section('content')
 <main class="login-form">
-  <div class="cotainer">
-      <div class="row justify-content-center">
-          <div class="col-md-8">
-              <div class="card">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
                   <div class="card-header">Register</div>
+                    <div class="alert alert-danger print-error-msg" style="display:none">
+                        <ul></ul>
+                    </div>
                   <div class="card-body">
                         @if(count($errors) > 0 )
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -102,7 +105,7 @@
 
   
                           <div class="col-md-6 offset-md-4">
-                              <button type="submit" class="btn btn-primary">
+                              <button type="button" class="btn btn-primary btn-submit">
                                   Register
                               </button>
                           </div>
@@ -118,11 +121,50 @@
 
 @section('js_content')
 <script>
-  $(function() {
-    $( "#datepicker").datepicker({
-  dateFormat: "dd-mm-yy",
-  maxDate: "-1m"
-});
-});
-  </script>
+    $(document).ready(function() {
+        $(".btn-submit").click(function(e){
+            e.preventDefault();
+       
+            var _token = $("input[name='_token']").val();
+            var first_name = $("input[name='first_name']").val();
+            var last_name = $("input[name='last_name']").val();
+            var email = $("input[name='email']").val();
+            var address = $("textarea[name='address']").val();
+            var password = $("input[name='password']").val();
+            var city = $("input[name='city']").val();
+            var state = $("input[name='state']").val();
+            var pincode = $("input[name='pincode']").val();
+       
+            $.ajax({
+                url: "{{ route('register.post') }}",
+                type:'POST',
+                data: {_token:_token, 
+                first_name:first_name, 
+                last_name:last_name, 
+                email:email,
+                password:password,
+                address:address,
+                city:city,
+                state:state,
+                pincode:pincode},
+                success: function(data) {
+                    if($.isEmptyObject(data.error)){
+                        alert(data.success);
+                    }else{
+                        printErrorMsg(data.error);
+                    }
+                }
+            });
+       
+        }); 
+       
+        function printErrorMsg (msg) {
+            $(".print-error-msg").find("ul").html('');
+            $(".print-error-msg").css('display','block');
+            $.each( msg, function( key, value ) {
+                $(".print-error-msg").find("ul").append('<li>'+value+'</li>');
+            });
+        }
+    });
+</script>
 @endsection

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Models\User;
 use Hash;
+use Validator;
   
 class AuthController extends Controller {
     /**
@@ -54,22 +55,25 @@ class AuthController extends Controller {
      * @return response()
      */
     public function postRegistration(Request $request) {  
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
-            'gender' => 'required',
-            'dob' => 'required|date_format:d-m-Y|date|before:-18 years',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-        ],
-        [
-            'dob.before' => 'User must have 18 years old.',
+            'address' => 'required',
+            'city' => 'required',
+            'state' => 'required',
+            'pincode' => 'required'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error'=>$validator->errors()->all()]);
+        }
            
         $data = $request->all();
         $check = $this->create($data);
          
-        return redirect("dashboard")->withSuccess('Great! You have Successfully loggedin');
+        return response()->json(['success'=>'User registration is successfull']);
     }
     
     /**
@@ -95,9 +99,11 @@ class AuthController extends Controller {
         'first_name' => $data['first_name'],
         'last_name' => $data['last_name'],
         'email' => $data['email'],
-        'gender' => $data['gender'],
-        'dob' => date('Y-m-d',strtotime($data['dob'])),
-        'password' => Hash::make($data['password'])
+        'password' => Hash::make($data['password']),
+        'address' => $data['address'],
+        'city' => $data['city'],
+        'state' => $data['state'],
+        'pincode' => $data['pincode'],
       ]);
     }
     
