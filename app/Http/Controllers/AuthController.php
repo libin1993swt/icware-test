@@ -42,7 +42,7 @@ class AuthController extends Controller {
    
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            return redirect()->intended('events')
+            return redirect()->intended('users')
                         ->withSuccess('You have Successfully loggedin');
         }
   
@@ -56,13 +56,13 @@ class AuthController extends Controller {
      */
     public function postRegistration(Request $request) {  
         $validator = Validator::make($request->all(), [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'first_name' => 'required|string',
+            'last_name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
             'address' => 'required',
-            'city' => 'required',
-            'state' => 'required',
+            'city' => 'required|string',
+            'state' => 'required|string',
             'pincode' => 'required'
         ]);
 
