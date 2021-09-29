@@ -34,6 +34,8 @@ class UserController extends Controller
 
         if (!empty($keyword)) {
             $users = User::where('first_name', 'LIKE', "%$keyword%")
+                ->orWhere('last_name', 'LIKE', "%$keyword%")
+                ->orWhere('email', 'LIKE', "%$keyword%")
                 ->latest()->paginate($perPage);
         } else {
             $users = User::latest()->paginate($perPage);
