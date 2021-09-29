@@ -150,6 +150,7 @@
                 success: function(data) {
                     if($.isEmptyObject(data.error)){
                         alert(data.success);
+                        window.location.href = "{{ route('login')}}";
                     }else{
                         printErrorMsg(data.error);
                     }

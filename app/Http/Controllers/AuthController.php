@@ -73,7 +73,7 @@ class AuthController extends Controller {
         $data = $request->all();
         $check = $this->create($data);
          
-        return response()->json(['success'=>'User registration is successfull']);
+        return response()->json(['success'=>'User registration is successfull. Please login with credentials']);
     }
     
     /**
